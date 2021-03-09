@@ -162,47 +162,47 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 		if len(args) == 3 {
 			switch second {
 			case "componentstatuses", "cs":
-				return prompt.FilterContains(getComponentStatusCompletions(c.client), third, true)
+				return prompt.FilterFuzzy(getComponentStatusCompletions(c.client), third, true)
 			case "configmaps", "cm":
-				return prompt.FilterContains(getConfigMapSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getConfigMapSuggestions(c.client, namespace), third, true)
 			case "daemonsets", "ds":
-				return prompt.FilterContains(getDaemonSetSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getDaemonSetSuggestions(c.client, namespace), third, true)
 			case "deploy", "deployments":
-				return prompt.FilterContains(getDeploymentSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getDeploymentSuggestions(c.client, namespace), third, true)
 			case "endpoints", "ep":
-				return prompt.FilterContains(getEndpointsSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getEndpointsSuggestions(c.client, namespace), third, true)
 			case "ingresses", "ing":
-				return prompt.FilterContains(getIngressSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getIngressSuggestions(c.client, namespace), third, true)
 			case "limitranges", "limits":
-				return prompt.FilterContains(getLimitRangeSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getLimitRangeSuggestions(c.client, namespace), third, true)
 			case "namespaces", "ns":
-				return prompt.FilterContains(getNameSpaceSuggestions(c.namespaceList), third, true)
+				return prompt.FilterFuzzy(getNameSpaceSuggestions(c.namespaceList), third, true)
 			case "no", "nodes":
-				return prompt.FilterContains(getNodeSuggestions(c.client), third, true)
+				return prompt.FilterFuzzy(getNodeSuggestions(c.client), third, true)
 			case "po", "pod", "pods":
-				return prompt.FilterContains(getPodSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getPodSuggestions(c.client, namespace), third, true)
 			case "persistentvolumeclaims", "pvc":
-				return prompt.FilterContains(getPersistentVolumeClaimSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getPersistentVolumeClaimSuggestions(c.client, namespace), third, true)
 			case "persistentvolumes", "pv":
-				return prompt.FilterContains(getPersistentVolumeSuggestions(c.client), third, true)
+				return prompt.FilterFuzzy(getPersistentVolumeSuggestions(c.client), third, true)
 			case "podsecuritypolicies", "psp":
-				return prompt.FilterContains(getPodSecurityPolicySuggestions(c.client), third, true)
+				return prompt.FilterFuzzy(getPodSecurityPolicySuggestions(c.client), third, true)
 			case "podtemplates":
-				return prompt.FilterContains(getPodTemplateSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getPodTemplateSuggestions(c.client, namespace), third, true)
 			case "replicasets", "rs":
-				return prompt.FilterContains(getReplicaSetSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getReplicaSetSuggestions(c.client, namespace), third, true)
 			case "replicationcontrollers", "rc":
-				return prompt.FilterContains(getReplicationControllerSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getReplicationControllerSuggestions(c.client, namespace), third, true)
 			case "resourcequotas", "quota":
-				return prompt.FilterContains(getResourceQuotasSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getResourceQuotasSuggestions(c.client, namespace), third, true)
 			case "secrets":
-				return prompt.FilterContains(getSecretSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getSecretSuggestions(c.client, namespace), third, true)
 			case "sa", "serviceaccounts":
-				return prompt.FilterContains(getServiceAccountSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getServiceAccountSuggestions(c.client, namespace), third, true)
 			case "svc", "services":
-				return prompt.FilterContains(getServiceSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getServiceSuggestions(c.client, namespace), third, true)
 			case "job", "jobs":
-				return prompt.FilterContains(getJobSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getJobSuggestions(c.client, namespace), third, true)
 			}
 		}
 	case "describe":
@@ -215,47 +215,47 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 		if len(args) == 3 {
 			switch second {
 			case "componentstatuses", "cs":
-				return prompt.FilterContains(getComponentStatusCompletions(c.client), third, true)
+				return prompt.FilterFuzzy(getComponentStatusCompletions(c.client), third, true)
 			case "configmaps", "cm":
-				return prompt.FilterContains(getConfigMapSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getConfigMapSuggestions(c.client, namespace), third, true)
 			case "daemonsets", "ds":
-				return prompt.FilterContains(getDaemonSetSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getDaemonSetSuggestions(c.client, namespace), third, true)
 			case "deploy", "deployments":
-				return prompt.FilterContains(getDeploymentSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getDeploymentSuggestions(c.client, namespace), third, true)
 			case "endpoints", "ep":
-				return prompt.FilterContains(getEndpointsSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getEndpointsSuggestions(c.client, namespace), third, true)
 			case "ingresses", "ing":
-				return prompt.FilterContains(getIngressSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getIngressSuggestions(c.client, namespace), third, true)
 			case "limitranges", "limits":
-				return prompt.FilterContains(getLimitRangeSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getLimitRangeSuggestions(c.client, namespace), third, true)
 			case "namespaces", "ns":
-				return prompt.FilterContains(getNameSpaceSuggestions(c.namespaceList), third, true)
+				return prompt.FilterFuzzy(getNameSpaceSuggestions(c.namespaceList), third, true)
 			case "no", "nodes":
-				return prompt.FilterContains(getNodeSuggestions(c.client), third, true)
+				return prompt.FilterFuzzy(getNodeSuggestions(c.client), third, true)
 			case "po", "pod", "pods":
-				return prompt.FilterContains(getPodSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getPodSuggestions(c.client, namespace), third, true)
 			case "persistentvolumeclaims", "pvc":
-				return prompt.FilterContains(getPersistentVolumeClaimSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getPersistentVolumeClaimSuggestions(c.client, namespace), third, true)
 			case "persistentvolumes", "pv":
-				return prompt.FilterContains(getPersistentVolumeSuggestions(c.client), third, true)
+				return prompt.FilterFuzzy(getPersistentVolumeSuggestions(c.client), third, true)
 			case "podsecuritypolicies", "psp":
-				return prompt.FilterContains(getPodSecurityPolicySuggestions(c.client), third, true)
+				return prompt.FilterFuzzy(getPodSecurityPolicySuggestions(c.client), third, true)
 			case "podtemplates":
-				return prompt.FilterContains(getPodTemplateSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getPodTemplateSuggestions(c.client, namespace), third, true)
 			case "replicasets", "rs":
-				return prompt.FilterContains(getReplicaSetSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getReplicaSetSuggestions(c.client, namespace), third, true)
 			case "replicationcontrollers", "rc":
-				return prompt.FilterContains(getReplicationControllerSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getReplicationControllerSuggestions(c.client, namespace), third, true)
 			case "resourcequotas", "quota":
-				return prompt.FilterContains(getResourceQuotasSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getResourceQuotasSuggestions(c.client, namespace), third, true)
 			case "secrets":
-				return prompt.FilterContains(getSecretSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getSecretSuggestions(c.client, namespace), third, true)
 			case "sa", "serviceaccounts":
-				return prompt.FilterContains(getServiceAccountSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getServiceAccountSuggestions(c.client, namespace), third, true)
 			case "svc", "services":
-				return prompt.FilterContains(getServiceSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getServiceSuggestions(c.client, namespace), third, true)
 			case "job", "jobs":
-				return prompt.FilterContains(getJobSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getJobSuggestions(c.client, namespace), third, true)
 			}
 		}
 	case "create":
@@ -333,47 +333,47 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 			third := args[2]
 			switch args[1] {
 			case "componentstatuses", "cs":
-				return prompt.FilterContains(getComponentStatusCompletions(c.client), third, true)
+				return prompt.FilterFuzzy(getComponentStatusCompletions(c.client), third, true)
 			case "configmaps", "cm":
-				return prompt.FilterContains(getConfigMapSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getConfigMapSuggestions(c.client, namespace), third, true)
 			case "daemonsets", "ds":
-				return prompt.FilterContains(getDaemonSetSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getDaemonSetSuggestions(c.client, namespace), third, true)
 			case "deploy", "deployments":
-				return prompt.FilterContains(getDeploymentSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getDeploymentSuggestions(c.client, namespace), third, true)
 			case "endpoints", "ep":
-				return prompt.FilterContains(getEndpointsSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getEndpointsSuggestions(c.client, namespace), third, true)
 			case "ingresses", "ing":
-				return prompt.FilterContains(getIngressSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getIngressSuggestions(c.client, namespace), third, true)
 			case "limitranges", "limits":
-				return prompt.FilterContains(getLimitRangeSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getLimitRangeSuggestions(c.client, namespace), third, true)
 			case "namespaces", "ns":
-				return prompt.FilterContains(getNameSpaceSuggestions(c.namespaceList), third, true)
+				return prompt.FilterFuzzy(getNameSpaceSuggestions(c.namespaceList), third, true)
 			case "no", "nodes":
-				return prompt.FilterContains(getNodeSuggestions(c.client), third, true)
+				return prompt.FilterFuzzy(getNodeSuggestions(c.client), third, true)
 			case "po", "pod", "pods":
-				return prompt.FilterContains(getPodSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getPodSuggestions(c.client, namespace), third, true)
 			case "persistentvolumeclaims", "pvc":
-				return prompt.FilterContains(getPersistentVolumeClaimSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getPersistentVolumeClaimSuggestions(c.client, namespace), third, true)
 			case "persistentvolumes", "pv":
-				return prompt.FilterContains(getPersistentVolumeSuggestions(c.client), third, true)
+				return prompt.FilterFuzzy(getPersistentVolumeSuggestions(c.client), third, true)
 			case "podsecuritypolicies", "psp":
-				return prompt.FilterContains(getPodSecurityPolicySuggestions(c.client), third, true)
+				return prompt.FilterFuzzy(getPodSecurityPolicySuggestions(c.client), third, true)
 			case "podtemplates":
-				return prompt.FilterContains(getPodTemplateSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getPodTemplateSuggestions(c.client, namespace), third, true)
 			case "replicasets", "rs":
-				return prompt.FilterContains(getReplicaSetSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getReplicaSetSuggestions(c.client, namespace), third, true)
 			case "replicationcontrollers", "rc":
-				return prompt.FilterContains(getReplicationControllerSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getReplicationControllerSuggestions(c.client, namespace), third, true)
 			case "resourcequotas", "quota":
-				return prompt.FilterContains(getResourceQuotasSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getResourceQuotasSuggestions(c.client, namespace), third, true)
 			case "secrets":
-				return prompt.FilterContains(getSecretSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getSecretSuggestions(c.client, namespace), third, true)
 			case "sa", "serviceaccounts":
-				return prompt.FilterContains(getServiceAccountSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getServiceAccountSuggestions(c.client, namespace), third, true)
 			case "svc", "services":
-				return prompt.FilterContains(getServiceSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getServiceSuggestions(c.client, namespace), third, true)
 			case "job", "jobs":
-				return prompt.FilterContains(getJobSuggestions(c.client, namespace), third, true)
+				return prompt.FilterFuzzy(getJobSuggestions(c.client, namespace), third, true)
 			}
 		}
 
@@ -383,7 +383,7 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 		}
 	case "logs":
 		if len(args) == 2 {
-			return prompt.FilterContains(getPodSuggestions(c.client, namespace), args[1], true)
+			return prompt.FilterFuzzy(getPodSuggestions(c.client, namespace), args[1], true)
 		}
 	case "rolling-update", "rollingupdate":
 		if len(args) == 2 {
@@ -397,7 +397,7 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 			r := getDeploymentSuggestions(c.client, namespace)
 			r = append(r, getReplicaSetSuggestions(c.client, namespace)...)
 			r = append(r, getReplicationControllerSuggestions(c.client, namespace)...)
-			return prompt.FilterContains(r, args[1], true)
+			return prompt.FilterFuzzy(r, args[1], true)
 		}
 	case "cordon":
 		fallthrough
@@ -413,11 +413,11 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 		}
 	case "exec":
 		if len(args) == 2 {
-			return prompt.FilterContains(getPodSuggestions(c.client, namespace), args[1], true)
+			return prompt.FilterFuzzy(getPodSuggestions(c.client, namespace), args[1], true)
 		}
 	case "port-forward":
 		if len(args) == 2 {
-			return prompt.FilterContains(getPodSuggestions(c.client, namespace), args[1], true)
+			return prompt.FilterFuzzy(getPodSuggestions(c.client, namespace), args[1], true)
 		}
 		if len(args) == 3 {
 			return prompt.FilterHasPrefix(getPortsFromPodName(namespace, args[1]), args[2], true)
@@ -441,7 +441,7 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 			fourth := args[3]
 			switch third {
 			case "deployment", "deploy":
-				return prompt.FilterContains(getDeploymentSuggestions(c.client, namespace), fourth, true)
+				return prompt.FilterFuzzy(getDeploymentSuggestions(c.client, namespace), fourth, true)
 			}
 		}
 	case "annotate":
