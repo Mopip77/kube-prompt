@@ -393,10 +393,23 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 		}
 	case "scale", "resize":
 		if len(args) == 2 {
+			return []prompt.Suggest{
+				{Text: "deployment", Description: "deployment"},
+				{Text: "rs", Description: "replica set"},
+				{Text: "rc", Description: "replica controller"},
+			}
+		}
+		if len(args) == 3 {
+			var r []prompt.Suggest
 			// Deployment, ReplicaSet, Replication Controller, or Job.
-			r := getDeploymentSuggestions(c.client, namespace)
-			r = append(r, getReplicaSetSuggestions(c.client, namespace)...)
-			r = append(r, getReplicationControllerSuggestions(c.client, namespace)...)
+			switch args[1] {
+				case "deployment", "deploy":
+					r = getDeploymentSuggestions(c.client, namespace)
+				case "rs":
+					r = getReplicaSetSuggestions(c.client, namespace)
+				case "rc":
+					r = getReplicaSetSuggestions(c.client, namespace)
+			}
 			return prompt.FilterFuzzy(r, args[1], true)
 		}
 	case "cordon":
