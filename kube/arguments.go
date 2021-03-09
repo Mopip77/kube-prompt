@@ -1,6 +1,8 @@
 package kube
 
-import prompt "github.com/c-bata/go-prompt"
+import (
+	prompt "github.com/c-bata/go-prompt"
+)
 
 var commands = []prompt.Suggest{
 	{Text: "get", Description: "Display one or many resources"},
@@ -13,6 +15,7 @@ var commands = []prompt.Suggest{
 	{Text: "apply", Description: "Apply a configuration to a resource by filename or stdin"},
 	{Text: "namespace", Description: "SUPERSEDED: Set and view the current Kubernetes namespace"},
 	{Text: "logs", Description: "Print the logs for a container in a pod."},
+	{Text: "rollout", Description: "rollout manages a deployment"},
 	{Text: "rolling-update", Description: "Perform a rolling update of the given ReplicationController."},
 	{Text: "scale", Description: "Set a new size for a Deployment, ReplicaSet, Replication Controller, or Job."},
 	{Text: "cordon", Description: "Mark node as unschedulable"},
@@ -25,7 +28,6 @@ var commands = []prompt.Suggest{
 	{Text: "run", Description: "Run a particular image on the cluster."},
 	{Text: "expose", Description: "Take a replication controller, service, or pod and expose it as a new Kubernetes Service"},
 	{Text: "autoscale", Description: "Auto-scale a Deployment, ReplicaSet, or ReplicationController"},
-	{Text: "rollout", Description: "rollout manages a deployment"},
 	{Text: "label", Description: "Update the labels on a resource"},
 	{Text: "annotate", Description: "Update the annotations on a resource"},
 	{Text: "config", Description: "config modifies kubeconfig files"},
@@ -422,13 +424,25 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 		}
 	case "rollout":
 		subCommands := []prompt.Suggest{
-			{Text: "history", Description: "view rollout history"},
+			{Text: "status", Description: "Watch current rollout progress"},
+			{Text: "history", Description: "View rollout history"},
 			{Text: "pause", Description: "Mark the provided resource as paused"},
 			{Text: "resume", Description: "Resume a paused resource"},
 			{Text: "undo", Description: "undoes a previous rollout"},
 		}
 		if len(args) == 2 {
 			return prompt.FilterHasPrefix(subCommands, args[1], true)
+		} else if len(args) == 3 {
+			return []prompt.Suggest{
+				{Text: "deployment", Description: "deployment"},
+			}
+		} else if len(args) == 4 {
+			third := args[2]
+			fourth := args[3]
+			switch third {
+			case "deployment", "deploy":
+				return prompt.FilterContains(getDeploymentSuggestions(c.client, namespace), fourth, true)
+			}
 		}
 	case "annotate":
 	case "config":
