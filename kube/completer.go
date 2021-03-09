@@ -1,7 +1,6 @@
 package kube
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
@@ -254,12 +253,4 @@ func excludeOptions(args []string) ([]string, bool) {
 		filtered = append(filtered, args[i])
 	}
 	return filtered, skipNextArg
-}
-
-/**
-自定义的prefix生成器，主要是展示了context和ns
-*/
-func (c *Completer) GetCurrentPrefix() (prefix string, useLivePrefix bool) {
-	prefix = fmt.Sprintf("(%s|%s)> ", c.context, c.namespace)
-	return prefix, true
 }

@@ -15,8 +15,8 @@ import (
 )
 
 var (
-	version  = "1.0.3"
-	revision = "b679065"
+	version  = "1.0.4"
+	revision = "8ff8ec0"
 )
 
 func main() {
@@ -34,8 +34,7 @@ func main() {
 		kube.Executor,
 		c.Complete,
 		prompt.OptionTitle("kube-prompt: interactive kubernetes client"),
-		//prompt.OptionPrefix(">>> "),
-		prompt.OptionLivePrefix(c.GetCurrentPrefix),
+		prompt.OptionLivePrefix(kube.GetPs1),
 		prompt.OptionInputTextColor(prompt.Yellow),
 		prompt.OptionCompletionWordSeparator(completer.FilePathCompletionSeparator),
 	)
