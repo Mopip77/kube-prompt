@@ -433,7 +433,10 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 			return prompt.FilterFuzzy(getPodSuggestions(c.client, namespace), args[1], true)
 		}
 		if len(args) == 3 {
-			return prompt.FilterHasPrefix(getPortsFromPodName(namespace, args[1]), args[2], true)
+			suggests := getPortsFromPodName(namespace, args[1])
+			// 增加自己常用的端口
+			suggests = append(suggests, prompt.Suggest{Text: "9999:9999", Description: "固定显示，port不一定启用"})
+			return prompt.FilterHasPrefix(suggests, args[2], true)
 		}
 	case "rollout":
 		subCommands := []prompt.Suggest{
