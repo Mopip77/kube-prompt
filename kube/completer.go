@@ -1,6 +1,7 @@
 package kube
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -15,6 +16,10 @@ import (
 
 func NewCompleter() (*Completer, error) {
 	loadingRules := clientcmd.NewDefaultClientConfigLoadingRules()
+
+	cfg, _ := loadingRules.Load()
+	context := cfg.CurrentContext
+
 	loader := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
 		loadingRules,
 		&clientcmd.ConfigOverrides{},
@@ -45,6 +50,7 @@ func NewCompleter() (*Completer, error) {
 	}
 
 	return &Completer{
+		context:       context,
 		namespace:     namespace,
 		namespaceList: namespaces,
 		client:        client,
@@ -52,11 +58,16 @@ func NewCompleter() (*Completer, error) {
 }
 
 type Completer struct {
+	context       string
 	namespace     string
 	namespaceList *corev1.NamespaceList
 	client        *kubernetes.Clientset
 }
 
+/**
+实际的解析器，就是根据光标之前的文本去直接前缀匹配（命令）
+如果是option -f --replica 这种，也是分流去匹配不同的内容
+*/
 func (c *Completer) Complete(d prompt.Document) []prompt.Suggest {
 	if d.TextBeforeCursor() == "" {
 		return []prompt.Suggest{}
@@ -243,4 +254,12 @@ func excludeOptions(args []string) ([]string, bool) {
 		filtered = append(filtered, args[i])
 	}
 	return filtered, skipNextArg
+}
+
+/**
+自定义的prefix生成器，主要是展示了context和ns
+*/
+func (c *Completer) GetCurrentPrefix() (prefix string, useLivePrefix bool) {
+	prefix = fmt.Sprintf("(%s|%s)> ", c.context, c.namespace)
+	return prefix, true
 }

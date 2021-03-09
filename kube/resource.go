@@ -47,6 +47,9 @@ var (
 	lastFetchedAt *sync.Map
 )
 
+/**
+十秒钟内不会重新拉新的pod信息
+*/
 func shouldFetch(key string) bool {
 	v, ok := lastFetchedAt.Load(key)
 	if !ok {
