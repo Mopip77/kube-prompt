@@ -203,6 +203,8 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 				return prompt.FilterFuzzy(getServiceSuggestions(c.client, namespace), third, true)
 			case "job", "jobs":
 				return prompt.FilterFuzzy(getJobSuggestions(c.client, namespace), third, true)
+			case "cronjobs":
+				return prompt.FilterFuzzy(getCronJobSuggestions(c.client, namespace), third, true)
 			}
 		}
 	case "describe":
@@ -256,6 +258,8 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 				return prompt.FilterFuzzy(getServiceSuggestions(c.client, namespace), third, true)
 			case "job", "jobs":
 				return prompt.FilterFuzzy(getJobSuggestions(c.client, namespace), third, true)
+			case "cronjobs":
+				return prompt.FilterFuzzy(getCronJobSuggestions(c.client, namespace), third, true)
 			}
 		}
 	case "create":
@@ -374,6 +378,8 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 				return prompt.FilterFuzzy(getServiceSuggestions(c.client, namespace), third, true)
 			case "job", "jobs":
 				return prompt.FilterFuzzy(getJobSuggestions(c.client, namespace), third, true)
+			case "cronjobs":
+				return prompt.FilterFuzzy(getCronJobSuggestions(c.client, namespace), third, true)
 			}
 		}
 
@@ -403,12 +409,12 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 			var r []prompt.Suggest
 			// Deployment, ReplicaSet, Replication Controller, or Job.
 			switch args[1] {
-				case "deployment", "deploy":
-					r = getDeploymentSuggestions(c.client, namespace)
-				case "rs":
-					r = getReplicaSetSuggestions(c.client, namespace)
-				case "rc":
-					r = getReplicaSetSuggestions(c.client, namespace)
+			case "deployment", "deploy":
+				r = getDeploymentSuggestions(c.client, namespace)
+			case "rs":
+				r = getReplicaSetSuggestions(c.client, namespace)
+			case "rc":
+				r = getReplicaSetSuggestions(c.client, namespace)
 			}
 			return prompt.FilterFuzzy(r, args[1], true)
 		}

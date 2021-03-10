@@ -12,6 +12,7 @@ import (
 	"github.com/c-bata/kube-prompt/internal/debug"
 	appsv1 "k8s.io/api/apps/v1"
 	batchv1 "k8s.io/api/batch/v1"
+	batchv1beta1 "k8s.io/api/batch/v1beta1"
 	corev1 "k8s.io/api/core/v1"
 	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	policyv1beta1 "k8s.io/api/policy/v1beta1"
@@ -39,6 +40,7 @@ func init() {
 	serviceAccountList = new(sync.Map)
 	serviceList = new(sync.Map)
 	jobList = new(sync.Map)
+	cronJobList = new(sync.Map)
 }
 
 /* LastFetchedAt */
@@ -959,6 +961,43 @@ func getJobSuggestions(client *kubernetes.Clientset, namespace string) []prompt.
 		s[i] = prompt.Suggest{
 			Text:        l.Items[i].Name,
 			Description: l.Items[i].Status.StartTime.String(),
+		}
+	}
+	return s
+}
+
+/* Cronjob */
+
+var (
+	cronJobList *sync.Map
+)
+
+func fetchCronJobs(client *kubernetes.Clientset, namespace string) {
+	key := "cronjob_" + namespace
+	if !shouldFetch(key) {
+		return
+	}
+	updateLastFetchedAt(key)
+
+	l, _ := client.BatchV1beta1().CronJobs(namespace).List(metav1.ListOptions{})
+	cronJobList.Store(namespace, l)
+}
+
+func getCronJobSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
+	go fetchCronJobs(client, namespace)
+	x, ok := cronJobList.Load(namespace)
+	if !ok {
+		return []prompt.Suggest{}
+	}
+	l, ok := x.(*batchv1beta1.CronJobList)
+	if !ok || len(l.Items) == 0 {
+		return []prompt.Suggest{}
+	}
+	s := make([]prompt.Suggest, len(l.Items))
+	for i := range l.Items {
+		s[i] = prompt.Suggest{
+			Text:        l.Items[i].Name,
+			Description: "last execute at:" + l.Items[i].Status.LastScheduleTime.String(),
 		}
 	}
 	return s
