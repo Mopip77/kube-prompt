@@ -8,19 +8,21 @@ import (
 
 var (
 	contextLastFetchedAt time.Time
-	currentContext string
-	currentNamespace string
+	currentContext       string
+	currentNamespace     string
 )
 
 /**
 自定义的prefix生成器，主要是展示了context和ns
+
+如果更换了context，需要重新reload一下client
 */
-func GetPs1() (ps1 string, useLivePrefix bool) {
-	context, namespace := getCurrentContextInfo()
+func (c *Completer) GetPs1() (ps1 string, useLivePrefix bool) {
+	context, namespace := getCurrentContextInfo(c)
 	return fmt.Sprintf("(%s|%s)> ", context, namespace), true
 }
 
-func getCurrentContextInfo() (context, namespace string) {
+func getCurrentContextInfo(c *Completer) (context, namespace string) {
 	if !(contextLastFetchedAt.IsZero() || time.Since(contextLastFetchedAt) > thresholdFetchInterval) {
 		return currentContext, currentNamespace
 	}
@@ -33,6 +35,10 @@ func getCurrentContextInfo() (context, namespace string) {
 	}
 
 	contexts := cfg.Contexts
+
+	if currentContext != cfg.CurrentContext {
+		go c.ReloadContext()
+	}
 
 	currentContext = cfg.CurrentContext
 	currentNamespace = contexts[currentContext].Namespace

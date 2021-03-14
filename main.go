@@ -34,7 +34,7 @@ func main() {
 		kube.Executor,
 		c.Complete,
 		prompt.OptionTitle("kube-prompt: interactive kubernetes client"),
-		prompt.OptionLivePrefix(kube.GetPs1),
+		prompt.OptionLivePrefix(c.GetPs1),
 		prompt.OptionInputTextColor(prompt.Yellow),
 		prompt.OptionCompletionWordSeparator(completer.FilePathCompletionSeparator),
 	)

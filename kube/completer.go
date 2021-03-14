@@ -104,6 +104,51 @@ func (c *Completer) Complete(d prompt.Document) []prompt.Suggest {
 	return c.argumentsCompleter(namespace, commandArgs)
 }
 
+/**
+重新读取context，并生成新的client
+*/
+func (c *Completer) ReloadContext() error {
+	loadingRules := clientcmd.NewDefaultClientConfigLoadingRules()
+
+	cfg, _ := loadingRules.Load()
+	context := cfg.CurrentContext
+
+	loader := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
+		loadingRules,
+		&clientcmd.ConfigOverrides{},
+	)
+
+	config, err := loader.ClientConfig()
+	if err != nil {
+		return err
+	}
+
+	namespace, _, err := loader.Namespace()
+	if err != nil {
+		return err
+	}
+
+	client, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		return err
+	}
+
+	namespaces, err := client.CoreV1().Namespaces().List(metav1.ListOptions{})
+	if err != nil {
+		if statusError, ok := err.(*errors.StatusError); ok && statusError.Status().Code == 403 {
+			namespaces = nil
+		} else {
+			return err
+		}
+	}
+
+	c.client = client
+	c.namespace = namespace
+	c.namespaceList = namespaces
+	c.context = context
+	return nil
+}
+
 func checkNamespaceArg(d prompt.Document) string {
 	args := strings.Split(d.Text, " ")
 	var found bool
