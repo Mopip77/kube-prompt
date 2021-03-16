@@ -2,6 +2,7 @@ package kube
 
 import (
 	"fmt"
+	"k8s.io/api/autoscaling/v2beta2"
 	"sort"
 	"strings"
 	"sync"
@@ -41,6 +42,7 @@ func init() {
 	serviceList = new(sync.Map)
 	jobList = new(sync.Map)
 	cronJobList = new(sync.Map)
+	hpaList = new(sync.Map)
 }
 
 /* LastFetchedAt */
@@ -998,6 +1000,50 @@ func getCronJobSuggestions(client *kubernetes.Clientset, namespace string) []pro
 		s[i] = prompt.Suggest{
 			Text:        l.Items[i].Name,
 			Description: "last execute at:" + l.Items[i].Status.LastScheduleTime.String(),
+		}
+	}
+	return s
+}
+
+/* hpa */
+
+var (
+	hpaList *sync.Map
+)
+
+func fetchHpas(client *kubernetes.Clientset, namespace string) {
+	key := "hpa_" + namespace
+	if !shouldFetch(key) {
+		return
+	}
+	updateLastFetchedAt(key)
+
+	l, _ := client.AutoscalingV2beta2().HorizontalPodAutoscalers(namespace).List(metav1.ListOptions{})
+	hpaList.Store(namespace, l)
+}
+
+func getHpaSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
+	go fetchHpas(client, namespace)
+	x, ok := hpaList.Load(namespace)
+	if !ok {
+		return []prompt.Suggest{}
+	}
+	l, ok := x.(*v2beta2.HorizontalPodAutoscalerList)
+	if !ok || len(l.Items) == 0 {
+		return []prompt.Suggest{}
+	}
+	s := make([]prompt.Suggest, len(l.Items))
+	for i := range l.Items {
+		desc := "last scaled at: "
+		if l.Items[i].Status.LastScaleTime != nil {
+			desc += l.Items[i].Status.LastScaleTime.Time.String()
+		} else {
+			desc = "not scaled yet"
+		}
+
+		s[i] = prompt.Suggest{
+			Text:        l.Items[i].Name,
+			Description: desc,
 		}
 	}
 	return s

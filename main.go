@@ -15,8 +15,8 @@ import (
 )
 
 var (
-	version  = "1.0.6"
-	revision = "5762b60"
+	version  = "1.1.0"
+	revision = "a878d731"
 )
 
 func main() {
@@ -27,7 +27,7 @@ func main() {
 	}
 
 	defer debug.Teardown()
-	fmt.Printf("kube-prompt %s (rev-%s) [enhanced by Mopip77]\n", version, revision)
+	fmt.Printf("kube-prompt %s (rev-%s) [customized by Mopip77]\n", version, revision)
 	fmt.Println("Please use `exit` or `Ctrl-D` to exit this program.")
 	defer fmt.Println("Bye!")
 	p := prompt.New(

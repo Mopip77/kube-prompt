@@ -205,6 +205,8 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 				return prompt.FilterContains(getJobSuggestions(c.client, namespace), third, true)
 			case "cronjobs":
 				return prompt.FilterContains(getCronJobSuggestions(c.client, namespace), third, true)
+			case "horizontalpodautoscalers", "hpa":
+				return prompt.FilterContains(getHpaSuggestions(c.client, namespace), third, true)
 			}
 		}
 	case "describe":
@@ -260,6 +262,8 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 				return prompt.FilterContains(getJobSuggestions(c.client, namespace), third, true)
 			case "cronjobs":
 				return prompt.FilterContains(getCronJobSuggestions(c.client, namespace), third, true)
+			case "horizontalpodautoscalers", "hpa":
+				return prompt.FilterContains(getHpaSuggestions(c.client, namespace), third, true)
 			}
 		}
 	case "create":
@@ -326,6 +330,8 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 				return prompt.FilterContains(getServiceSuggestions(c.client, namespace), third, true)
 			case "job", "jobs":
 				return prompt.FilterContains(getJobSuggestions(c.client, namespace), third, true)
+			case "horizontalpodautoscalers", "hpa":
+				return prompt.FilterContains(getHpaSuggestions(c.client, namespace), third, true)
 			}
 		}
 	case "edit":
@@ -380,6 +386,8 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 				return prompt.FilterContains(getJobSuggestions(c.client, namespace), third, true)
 			case "cronjobs":
 				return prompt.FilterContains(getCronJobSuggestions(c.client, namespace), third, true)
+			case "horizontalpodautoscalers", "hpa":
+				return prompt.FilterContains(getHpaSuggestions(c.client, namespace), third, true)
 			}
 		}
 
