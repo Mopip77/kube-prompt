@@ -51,6 +51,10 @@ var (
 	lastFetchedAt *sync.Map
 )
 
+func FlushAllResourceListCache() {
+	lastFetchedAt = new(sync.Map)
+}
+
 /**
 十秒钟内不会重新拉新的pod信息
 */

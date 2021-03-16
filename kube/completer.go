@@ -13,7 +13,20 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
+var (
+	GlobalCompleter *Completer
+)
+
 func NewCompleter() (*Completer, error) {
+	var err error
+	if GlobalCompleter == nil {
+		GlobalCompleter, err = newCompleter()
+	}
+
+	return GlobalCompleter, err
+}
+
+func newCompleter() (*Completer, error) {
 	loadingRules := clientcmd.NewDefaultClientConfigLoadingRules()
 
 	cfg, _ := loadingRules.Load()
@@ -146,6 +159,10 @@ func (c *Completer) ReloadContext() error {
 	c.namespace = namespace
 	c.namespaceList = namespaces
 	c.context = context
+
+	// 清空资源缓存
+	FlushAllResourceListCache()
+
 	return nil
 }
 

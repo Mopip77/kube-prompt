@@ -27,6 +27,10 @@ func getCurrentContextInfo(c *Completer) (context, namespace string) {
 		return currentContext, currentNamespace
 	}
 
+	return ReloadContextInfo(c)
+}
+
+func ReloadContextInfo(c *Completer) (context, namespace string) {
 	contextLastFetchedAt = time.Now()
 
 	cfg, err := clientcmd.NewDefaultClientConfigLoadingRules().Load()

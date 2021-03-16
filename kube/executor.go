@@ -27,6 +27,12 @@ func Executor(s string) {
 	if err := cmd.Run(); err != nil {
 		fmt.Printf("Got error: %s\n", err.Error())
 	}
+
+	if changeContext(s) {
+		GlobalCompleter.ReloadContext()
+		ReloadContextInfo(GlobalCompleter)
+	}
+
 	return
 }
 
@@ -47,4 +53,9 @@ func ExecuteAndGetResult(s string) string {
 	}
 	r := string(out.Bytes())
 	return r
+}
+
+func changeContext(command string) bool {
+	args := strings.Split(command, " ")
+	return len(args) > 2 && args[0] == "config" && args[1] == "use-context"
 }
