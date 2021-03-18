@@ -417,7 +417,7 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 			var r []prompt.Suggest
 			// Deployment, ReplicaSet, Replication Controller, or Job.
 			switch args[1] {
-			case "deployment", "deploy":
+			case "deployment", "deploy", "deployments":
 				r = getDeploymentSuggestions(c.client, namespace)
 			case "rs":
 				r = getReplicaSetSuggestions(c.client, namespace)

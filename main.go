@@ -15,8 +15,8 @@ import (
 )
 
 var (
-	version  = "1.1.0"
-	revision = "a878d731"
+	version  = "1.1.1"
+	revision = "daaa249"
 )
 
 func main() {
