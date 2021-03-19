@@ -424,7 +424,7 @@ func (c *Completer) argumentsCompleter(namespace string, args []string) []prompt
 			case "rc":
 				r = getReplicaSetSuggestions(c.client, namespace)
 			}
-			return prompt.FilterContains(r, args[1], true)
+			return prompt.FilterContains(r, args[2], true)
 		}
 	case "cordon":
 		fallthrough

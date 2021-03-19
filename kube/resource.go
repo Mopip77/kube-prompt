@@ -387,7 +387,7 @@ func fetchEndpoints(client *kubernetes.Clientset, namespace string) {
 	updateLastFetchedAt(key)
 
 	l, _ := client.CoreV1().Endpoints(namespace).List(metav1.ListOptions{})
-	endpointList.Store(key, l)
+	endpointList.Store(namespace, l)
 	return
 }
 
