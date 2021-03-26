@@ -1001,9 +1001,16 @@ func getCronJobSuggestions(client *kubernetes.Clientset, namespace string) []pro
 	}
 	s := make([]prompt.Suggest, len(l.Items))
 	for i := range l.Items {
+		desc := "last execute at: "
+		if l.Items[i].Status.LastScheduleTime != nil {
+			desc += l.Items[i].Status.LastScheduleTime.Time.String()
+		} else {
+			desc = "not execute yet"
+		}
+
 		s[i] = prompt.Suggest{
 			Text:        l.Items[i].Name,
-			Description: "last execute at:" + l.Items[i].Status.LastScheduleTime.Time.String(),
+			Description: desc,
 		}
 	}
 	return s
