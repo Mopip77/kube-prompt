@@ -64,6 +64,7 @@ func newCompleter() (*Completer, error) {
 	return &Completer{
 		context:       context,
 		namespace:     namespace,
+		clusterUrl:    config.Host,
 		namespaceList: namespaces,
 		client:        client,
 	}, nil
@@ -72,6 +73,7 @@ func newCompleter() (*Completer, error) {
 type Completer struct {
 	context       string
 	namespace     string
+	clusterUrl    string
 	namespaceList *corev1.NamespaceList
 	client        *kubernetes.Clientset
 }
@@ -157,6 +159,7 @@ func (c *Completer) ReloadContext() error {
 
 	c.client = client
 	c.namespace = namespace
+	c.clusterUrl = config.Host
 	c.namespaceList = namespaces
 	c.context = context
 

@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	version  = "1.1.2"
+	version  = "1.1.3"
 	revision = "daaa249"
 )
 
@@ -31,7 +31,7 @@ func main() {
 	fmt.Println("Please use `exit` or `Ctrl-D` to exit this program.")
 	defer fmt.Println("Bye!")
 	p := prompt.New(
-		kube.Executor,
+		c.Executor,
 		c.Complete,
 		prompt.OptionTitle("kube-prompt: interactive kubernetes client"),
 		prompt.OptionLivePrefix(c.GetPs1),
