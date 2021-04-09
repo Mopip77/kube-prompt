@@ -76,7 +76,7 @@ func blockDangerousProdCommand(c *Completer, commandStr string) (isDangerousProd
 		return
 	}
 
-	if strings.Contains("edit;scale;delete;apply;create;replace;rollout;rolling-update;run;", command) {
+	if strings.Contains("edit;scale;delete;apply;create;replace;rolling-update;run;", command) {
 		color.Red("您现在正在非test/beta环境执行危险指令，请确认后在rancher中执行!!")
 		// 解析cluster url
 		// https://rancher.domain.com/k8s/clusters/<c-id>  ==>  https://rancher.domain.com/dashboard/c/<c-id>/explorer
