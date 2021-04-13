@@ -71,8 +71,14 @@ func changeContext(command string) bool {
 func blockDangerousProdCommand(c *Completer, commandStr string) (isDangerousProdCommand bool) {
 	args := strings.Split(commandStr, " ")
 	command := args[0]
+	unsafeFlag := args[len(args)-1]
 
 	if strings.Contains(c.context, "test") || strings.Contains(c.context, "beta") {
+		return
+	}
+
+	if unsafeFlag == "unsafe" {
+		// 后门
 		return
 	}
 
