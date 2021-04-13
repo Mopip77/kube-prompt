@@ -24,8 +24,10 @@ func (c *Completer) Executor(s string) {
 	}
 
 	// 对于线上环境屏蔽一些操作
-	if blockDangerousProdCommand(c, s) {
+	if blocked, cmd := blockDangerousProdCommand(c, s); blocked {
 		return
+	} else {
+		s = cmd
 	}
 
 	cmd := exec.Command("/bin/sh", "-c", "kubectl "+s)
@@ -68,7 +70,8 @@ func changeContext(command string) bool {
 	return len(args) > 2 && args[0] == "config" && args[1] == "use-context"
 }
 
-func blockDangerousProdCommand(c *Completer, commandStr string) (isDangerousProdCommand bool) {
+func blockDangerousProdCommand(c *Completer, commandStr string) (isDangerousProdCommand bool, newCommandStr string) {
+	newCommandStr = commandStr
 	args := strings.Split(commandStr, " ")
 	command := args[0]
 	unsafeFlag := args[len(args)-1]
@@ -78,7 +81,8 @@ func blockDangerousProdCommand(c *Completer, commandStr string) (isDangerousProd
 	}
 
 	if unsafeFlag == "unsafe" {
-		// 后门
+		// 后门，移除最后一个参数
+		newCommandStr = strings.Join(args[:len(args)-1], " ")
 		return
 	}
 
@@ -99,7 +103,7 @@ func blockDangerousProdCommand(c *Completer, commandStr string) (isDangerousProd
 		}
 
 		renderResult([][]string{
-			{"command", "kubectl " + commandStr},
+			{"command", "kubectl " + newCommandStr},
 			{"rancher", dashboardUrl},
 		})
 		isDangerousProdCommand = true
