@@ -21,6 +21,36 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
+type Suggests []prompt.Suggest
+
+/* Suggest sort interface 主要把cronjob排在后面，否则太影响效率了 */
+
+func (s Suggests) Len() int {
+	return len(s)
+}
+
+func (s Suggests) Less(i, j int) bool {
+	iB := 0
+	jB := 0
+	if strings.Contains(s[i].Text, "cronjob") {
+		iB = 1
+	}
+	if strings.Contains(s[j].Text, "cronjob") {
+		jB = 1
+	}
+	if iB != jB {
+		return iB <= jB
+	}
+
+	return s[i].Text <= s[j].Text
+}
+
+func (s Suggests) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+/* resource init */
+
 const thresholdFetchInterval = 10 * time.Second
 
 func init() {
@@ -96,12 +126,13 @@ func getComponentStatusCompletions(client *kubernetes.Clientset) []prompt.Sugges
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -127,12 +158,13 @@ func getConfigMapSuggestions(client *kubernetes.Clientset, namespace string) []p
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -159,12 +191,13 @@ func getContextSuggestions() []prompt.Suggest {
 	if !ok || len(l) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l))
+	s := Suggests{}
 	for i := range l {
 		s[i] = prompt.Suggest{
 			Text: l[i],
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -195,13 +228,14 @@ func getPodSuggestions(client *kubernetes.Clientset, namespace string) []prompt.
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text:        l.Items[i].Name,
 			Description: string(l.Items[i].Status.Phase),
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -242,16 +276,16 @@ func getPortsFromPodName(namespace string, podName string) []prompt.Suggest {
 	for k := range portSet {
 		ports = append(ports, int(k))
 	}
-	sort.Ints(ports)
 
 	// Prepare suggestions
-	suggests := make([]prompt.Suggest, 0, len(ports))
+	s := Suggests{}
 	for i := range ports {
-		suggests = append(suggests, prompt.Suggest{
+		s = append(s, prompt.Suggest{
 			Text: fmt.Sprintf("%d:%d", ports[i], ports[i]),
 		})
 	}
-	return suggests
+	sort.Sort(s)
+	return s
 }
 
 func getContainerNamesFromCachedPods(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -272,13 +306,14 @@ func getContainerNamesFromCachedPods(client *kubernetes.Clientset, namespace str
 			set[l.Items[i].Spec.Containers[j].Name] = l.Items[i].Name
 		}
 	}
-	s := make([]prompt.Suggest, 0, len(set))
+	s := Suggests{}
 	for key := range set {
 		s = append(s, prompt.Suggest{
 			Text:        key,
 			Description: "Pod Name: " + set[key],
 		})
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -289,13 +324,14 @@ func getContainerName(client *kubernetes.Clientset, namespace string, podName st
 	if !found {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(pod.Spec.Containers))
+	s := Suggests{}
 	for i := range pod.Spec.Containers {
 		s[i] = prompt.Suggest{
 			Text:        pod.Spec.Containers[i].Name,
 			Description: "",
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -327,12 +363,13 @@ func getDaemonSetSuggestions(client *kubernetes.Clientset, namespace string) []p
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -364,12 +401,13 @@ func getDeploymentSuggestions(client *kubernetes.Clientset, namespace string) []
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -401,12 +439,13 @@ func getEndpointsSuggestions(client *kubernetes.Clientset, namespace string) []p
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -438,12 +477,13 @@ func getEventsSuggestions(client *kubernetes.Clientset, namespace string) []prom
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -471,12 +511,13 @@ func getNodeSuggestions(client *kubernetes.Clientset) []prompt.Suggest {
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -508,12 +549,13 @@ func getSecretSuggestions(client *kubernetes.Clientset, namespace string) []prom
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -549,12 +591,13 @@ func getIngressSuggestions(client *kubernetes.Clientset, namespace string) []pro
 	if len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -586,12 +629,13 @@ func getLimitRangeSuggestions(client *kubernetes.Clientset, namespace string) []
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -601,12 +645,13 @@ func getNameSpaceSuggestions(namespaceList *corev1.NamespaceList) []prompt.Sugge
 	if namespaceList == nil || len(namespaceList.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(namespaceList.Items))
+	s := Suggests{}
 	for i := range namespaceList.Items {
 		s[i] = prompt.Suggest{
 			Text: namespaceList.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -638,12 +683,13 @@ func getPersistentVolumeClaimSuggestions(client *kubernetes.Clientset, namespace
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -671,12 +717,13 @@ func getPersistentVolumeSuggestions(client *kubernetes.Clientset) []prompt.Sugge
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -704,12 +751,13 @@ func getPodSecurityPolicySuggestions(client *kubernetes.Clientset) []prompt.Sugg
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -741,12 +789,13 @@ func getPodTemplateSuggestions(client *kubernetes.Clientset, namespace string) [
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -778,12 +827,13 @@ func getReplicaSetSuggestions(client *kubernetes.Clientset, namespace string) []
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -815,12 +865,13 @@ func getReplicationControllerSuggestions(client *kubernetes.Clientset, namespace
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -852,12 +903,13 @@ func getResourceQuotasSuggestions(client *kubernetes.Clientset, namespace string
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -889,12 +941,13 @@ func getServiceAccountSuggestions(client *kubernetes.Clientset, namespace string
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -926,12 +979,13 @@ func getServiceSuggestions(client *kubernetes.Clientset, namespace string) []pro
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -962,13 +1016,14 @@ func getJobSuggestions(client *kubernetes.Clientset, namespace string) []prompt.
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text:        l.Items[i].Name,
 			Description: l.Items[i].Status.StartTime.String(),
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -999,7 +1054,7 @@ func getCronJobSuggestions(client *kubernetes.Clientset, namespace string) []pro
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		desc := "last execute at: "
 		if l.Items[i].Status.LastScheduleTime != nil {
@@ -1013,6 +1068,7 @@ func getCronJobSuggestions(client *kubernetes.Clientset, namespace string) []pro
 			Description: desc,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
 
@@ -1043,7 +1099,7 @@ func getHpaSuggestions(client *kubernetes.Clientset, namespace string) []prompt.
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := make([]prompt.Suggest, len(l.Items))
+	s := Suggests{}
 	for i := range l.Items {
 		desc := "last scaled at: "
 		if l.Items[i].Status.LastScaleTime != nil {
@@ -1057,5 +1113,6 @@ func getHpaSuggestions(client *kubernetes.Clientset, namespace string) []prompt.
 			Description: desc,
 		}
 	}
+	sort.Sort(s)
 	return s
 }
