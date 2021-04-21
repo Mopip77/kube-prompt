@@ -126,7 +126,7 @@ func getComponentStatusCompletions(client *kubernetes.Clientset) []prompt.Sugges
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -158,7 +158,7 @@ func getConfigMapSuggestions(client *kubernetes.Clientset, namespace string) []p
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -191,7 +191,7 @@ func getContextSuggestions() []prompt.Suggest {
 	if !ok || len(l) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l))
 	for i := range l {
 		s[i] = prompt.Suggest{
 			Text: l[i],
@@ -278,7 +278,7 @@ func getPortsFromPodName(namespace string, podName string) []prompt.Suggest {
 	}
 
 	// Prepare suggestions
-	s := Suggests{}
+	s := make(Suggests, len(portSet))
 	for i := range ports {
 		s = append(s, prompt.Suggest{
 			Text: fmt.Sprintf("%d:%d", ports[i], ports[i]),
@@ -306,7 +306,7 @@ func getContainerNamesFromCachedPods(client *kubernetes.Clientset, namespace str
 			set[l.Items[i].Spec.Containers[j].Name] = l.Items[i].Name
 		}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for key := range set {
 		s = append(s, prompt.Suggest{
 			Text:        key,
@@ -324,7 +324,7 @@ func getContainerName(client *kubernetes.Clientset, namespace string, podName st
 	if !found {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(pod.Spec.Containers))
 	for i := range pod.Spec.Containers {
 		s[i] = prompt.Suggest{
 			Text:        pod.Spec.Containers[i].Name,
@@ -363,7 +363,7 @@ func getDaemonSetSuggestions(client *kubernetes.Clientset, namespace string) []p
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -401,7 +401,7 @@ func getDeploymentSuggestions(client *kubernetes.Clientset, namespace string) []
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -439,7 +439,7 @@ func getEndpointsSuggestions(client *kubernetes.Clientset, namespace string) []p
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -477,7 +477,7 @@ func getEventsSuggestions(client *kubernetes.Clientset, namespace string) []prom
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -511,7 +511,7 @@ func getNodeSuggestions(client *kubernetes.Clientset) []prompt.Suggest {
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -549,7 +549,7 @@ func getSecretSuggestions(client *kubernetes.Clientset, namespace string) []prom
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -591,7 +591,7 @@ func getIngressSuggestions(client *kubernetes.Clientset, namespace string) []pro
 	if len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -629,7 +629,7 @@ func getLimitRangeSuggestions(client *kubernetes.Clientset, namespace string) []
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -645,7 +645,7 @@ func getNameSpaceSuggestions(namespaceList *corev1.NamespaceList) []prompt.Sugge
 	if namespaceList == nil || len(namespaceList.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(namespaceList.Items))
 	for i := range namespaceList.Items {
 		s[i] = prompt.Suggest{
 			Text: namespaceList.Items[i].Name,
@@ -683,7 +683,7 @@ func getPersistentVolumeClaimSuggestions(client *kubernetes.Clientset, namespace
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -717,7 +717,7 @@ func getPersistentVolumeSuggestions(client *kubernetes.Clientset) []prompt.Sugge
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -751,7 +751,7 @@ func getPodSecurityPolicySuggestions(client *kubernetes.Clientset) []prompt.Sugg
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -789,7 +789,7 @@ func getPodTemplateSuggestions(client *kubernetes.Clientset, namespace string) [
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -827,7 +827,7 @@ func getReplicaSetSuggestions(client *kubernetes.Clientset, namespace string) []
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -865,7 +865,7 @@ func getReplicationControllerSuggestions(client *kubernetes.Clientset, namespace
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -903,7 +903,7 @@ func getResourceQuotasSuggestions(client *kubernetes.Clientset, namespace string
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -941,7 +941,7 @@ func getServiceAccountSuggestions(client *kubernetes.Clientset, namespace string
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -979,7 +979,7 @@ func getServiceSuggestions(client *kubernetes.Clientset, namespace string) []pro
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text: l.Items[i].Name,
@@ -1016,7 +1016,7 @@ func getJobSuggestions(client *kubernetes.Clientset, namespace string) []prompt.
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		s[i] = prompt.Suggest{
 			Text:        l.Items[i].Name,
@@ -1054,7 +1054,7 @@ func getCronJobSuggestions(client *kubernetes.Clientset, namespace string) []pro
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		desc := "last execute at: "
 		if l.Items[i].Status.LastScheduleTime != nil {
@@ -1099,7 +1099,7 @@ func getHpaSuggestions(client *kubernetes.Clientset, namespace string) []prompt.
 	if !ok || len(l.Items) == 0 {
 		return []prompt.Suggest{}
 	}
-	s := Suggests{}
+	s := make(Suggests, len(l.Items))
 	for i := range l.Items {
 		desc := "last scaled at: "
 		if l.Items[i].Status.LastScaleTime != nil {

@@ -2,20 +2,18 @@ package main
 
 import (
 	"fmt"
-	"os"
-
-	prompt "github.com/c-bata/go-prompt"
+	"github.com/c-bata/go-prompt"
 	"github.com/c-bata/go-prompt/completer"
 	"github.com/c-bata/kube-prompt/internal/debug"
 	"github.com/c-bata/kube-prompt/kube"
-
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/openstack"
+	"os"
 )
 
 var (
-	version  = "1.1.3"
+	version  = "1.1.4"
 	revision = "daaa249"
 )
 
